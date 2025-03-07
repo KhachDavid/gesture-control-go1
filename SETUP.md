@@ -1,5 +1,7 @@
 # How to run
 
+Before starting the process, make sure you can run unitree_ws. The instructions are included in unitree_ws/README.md.
+
 1. Connect to Unitree's WiFi network. Upon turning it on, you should see a network named `UNITREE-XXXXXX`. Connect to it using the image below as a reference.
 
 ![Unitree WiFi](
