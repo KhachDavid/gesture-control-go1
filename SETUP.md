@@ -36,7 +36,7 @@ cd frames_worker
 python3 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
-python3 main.py
+python3 camera_feed.py
 ```
 
 If your Brilliant Frames are on, this script should pair with your glasses and start displaying the camera feed from the dog.

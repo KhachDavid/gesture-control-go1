@@ -1,33 +1,16 @@
 import asyncio
-import cv2
-import glob
 import sys
-import math
 import os
 import subprocess
 from importlib.resources import files
-
-from matplotlib import pyplot as plt
-
 from PIL import Image
-
-import mediapipe as mp
-from mediapipe.framework.formats import landmark_pb2
-from mediapipe.tasks import python
-from mediapipe.tasks.python import vision
 
 from frame_msg import FrameMsg, TxSprite, TxImageSpriteBlock
 
-# Initialize mediapipe gesture recognition
-base_options = python.BaseOptions(model_asset_path='gesture_recognizer.task')
-options = vision.GestureRecognizerOptions(base_options=base_options)
-recognizer = vision.GestureRecognizer.create_from_options(options)
+# Get the absolute path of the directory where the script is located
+script_dir = os.path.dirname(os.path.abspath(__file__))
 
-mp_hands = mp.solutions.hands
-mp_drawing = mp.solutions.drawing_utils
-mp_drawing_styles = mp.solutions.drawing_styles
-
-DOG_FRAMES_DIR = "dog_frames"
+DOG_FRAMES_DIR = os.path.join(script_dir, "dog_frames")  # Adjust if needed
 # if in test mode, use the test directory
 args = sys.argv 
 if len(args) > 1 and args[1] == "test":
@@ -76,10 +59,6 @@ async def check_camera_feed():
     # Note: we can't await_print here because the require() doesn't return - it has a main loop
     await frame.send_lua("require('frame_app')", await_print=False)
 
-    # give Frame a moment to start the frameside app,
-    # based on how much work the app does before it's ready to process incoming data
-    await asyncio.sleep(0.5)
-
     # Now that the Frameside app has started there is no need to send snippets of Lua
     # code directly (in fact, we would need to send a break_signal if we wanted to because
     # the main app loop on Frame is running).
@@ -89,21 +68,13 @@ async def check_camera_feed():
 
     # start the photo capture loop and the ros2 controlling interface
     running = True  # Variable to control photo capture loop
-    images = []
-    results = []
-
-    i = 0  # Counter for photos
     while running:  # Keep capturing photos
         
          # Create async tasks for parallel execution
         await fetch_and_display_dog_frame(frame)
-
-        i += 1
         await asyncio.sleep(0.01)  # Small delay
 
     # stop the photo handler and clean up resources
-
-    display_batch_of_images_with_gestures_and_hand_landmarks(images, results)
     frame.detach_print_response_handler()
     await frame.stop_frame_app()
 
@@ -120,13 +91,20 @@ async def display_latest_dog_frame(f):
     """Displays the last saved image from the local dog_frames directory."""
     try:
         # Get a list of all .jpg files in the directory
-        img = Image.open("dog_frames/latest.jpg")
-        # Get the first half of the image's width not the height because it is a stereo image
+        #img = Image.open(f"{DOG_FRAMES_DIR}/latest.jpg")
+        # Can you change image open to be absolute path?
+        # Like the absolute path from /home...
+        image_path = os.path.join(DOG_FRAMES_DIR, "latest.jpg")
+        img = Image.open(image_path)
+        print(f"Image path: {image_path}")
 
-        # Pack the image into a TxSprite object
-        sprite = TxSprite.from_image_bytes(img, max_pixels=64000, compress=True)
-        isb = TxImageSpriteBlock(image=sprite)
-        
+        if img is None:
+            print("No image found.")
+            return
+
+        sprite = TxSprite.from_image_bytes(img, max_pixels=40000)
+        isb = TxImageSpriteBlock(image=sprite, sprite_line_height=16, progressive_render=True)
+
         await f.send_message(0x20, isb.pack())
         # then send all the slices
         for spr in isb.sprite_lines:
@@ -150,69 +128,10 @@ def transfer_latest_image_from_robot():
         # Make sure the file is valid and fully downloaded before proceeding
         if os.path.getsize(f"{DOG_FRAMES_DIR}/latest.jpg") < 1000:  # File too small = likely incomplete
             raise ValueError(f"Downloaded image is too small! ({os.path.getsize(f'{DOG_FRAMES_DIR}/latest.jpg')} bytes)")
+        print("Transferred the file")
 
     except subprocess.CalledProcessError as e:
         print(f"HTTP transfer failed: {e}")
-
-
-def display_batch_of_images_with_gestures_and_hand_landmarks(images, results):
-    """Displays a batch of images with the gesture category and its score along with the hand landmarks."""
-    # Images and labels.
-    images = [image.numpy_view() for image in images]
-    # rotate images back to original orientation
-    images = [cv2.rotate(image, cv2.ROTATE_90_COUNTERCLOCKWISE) for image in images]
-    
-    gestures = [top_gesture for (top_gesture, _) in results]
-    multi_hand_landmarks_list = [multi_hand_landmarks for (_, multi_hand_landmarks) in results]
-
-    # Auto-squaring: this will drop data that does not fit into square or square-ish rectangle.
-    rows = int(math.sqrt(len(images)))
-    cols = len(images) // rows
-
-    # Size and spacing.
-    FIGSIZE = 13.0
-    SPACING = 0.1
-    subplot=(rows,cols, 1)
-    if rows < cols:
-        plt.figure(figsize=(FIGSIZE,FIGSIZE/cols*rows))
-    else:
-        plt.figure(figsize=(FIGSIZE/rows*cols,FIGSIZE))
-
-    # Display gestures and hand landmarks.
-    for i, (image, gestures) in enumerate(zip(images[:rows*cols], gestures[:rows*cols])):
-        title = f"{gestures.category_name} ({gestures.score:.2f})"
-        dynamic_titlesize = FIGSIZE*SPACING/max(rows,cols) * 40 + 3
-        annotated_image = image.copy()
-
-        for hand_landmarks in multi_hand_landmarks_list[i]:
-          hand_landmarks_proto = landmark_pb2.NormalizedLandmarkList()
-          hand_landmarks_proto.landmark.extend([
-            landmark_pb2.NormalizedLandmark(x=landmark.x, y=landmark.y, z=landmark.z) for landmark in hand_landmarks
-          ])
-
-          mp_drawing.draw_landmarks(
-            annotated_image,
-            hand_landmarks_proto,
-            mp_hands.HAND_CONNECTIONS,
-            mp_drawing_styles.get_default_hand_landmarks_style(),
-            mp_drawing_styles.get_default_hand_connections_style())
-
-        subplot = display_one_image(annotated_image, title, subplot, titlesize=dynamic_titlesize)
-
-    # Layout.
-    plt.tight_layout()
-    plt.subplots_adjust(wspace=SPACING, hspace=SPACING)
-    plt.show()
-
-
-def display_one_image(image, title, subplot, titlesize=16):
-    """Displays one image along with the predicted category name and score."""
-    plt.subplot(*subplot)
-    plt.imshow(image)
-    if len(title) > 0:
-        plt.title(title, fontsize=int(titlesize), color='black', fontdict={'verticalalignment':'center'}, pad=int(titlesize/1.5))
-    return (subplot[0], subplot[1], subplot[2]+1)
-
 
 if __name__ == "__main__":
     asyncio.run(main())
