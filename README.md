@@ -1,4 +1,6 @@
-# Controlling Unitree GO1 Quadruped Robot with Gestures using Mediapipe while Streaming GO1's Camera Feed to AR Glasses
+# Quadruped Robotics with Hand Gesture Recognition and AR Glasses
+
+<video src="https://github.com/user-attachments/assets/f5e1d19e-e097-401d-8b28-f44feecbcfc0"></video>
 
 ## Introduction
 
