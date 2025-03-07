@@ -120,7 +120,7 @@ async def display_latest_dog_frame(f):
     """Displays the last saved image from the local dog_frames directory."""
     try:
         # Get a list of all .jpg files in the directory
-        img = Image.open("/home/david/Frames/gesture-ar-robot-control/dog_frames/latest.jpg")
+        img = Image.open("dog_frames/latest.jpg")
         # Get the first half of the image's width not the height because it is a stereo image
 
         # Pack the image into a TxSprite object
