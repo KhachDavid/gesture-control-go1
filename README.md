@@ -18,11 +18,17 @@ This project combines quadruped robotics, computer vision for hand gesture recog
     readme_assets/animated_block_diagram.gif
 )
 
-**Unitree GO1 Quadruped Robot**: The GO1 robot is a quadruped robot developed by Unitree Robotics. It is controlled using a C++ API that communicates with the robot through a UDP connection. The API provides functions to control the robot's joints, read sensor data, and get the robot's camera feed. It is adapted from the repository [unitree_legged_sdk](https://github.com/katie-hughes/unitree_ros2). A new ROS2 node was created to control the robot using the API. The node has a variable that stores the current gesture, which is updated via a subscription to the "active_gesture" topic. The subscriber callback receives strings representing gestures and sets the current gesture accordingly. In the high-frequency control loop, the node evaluates the current gesture and formulates a corresponding command message. Depending on the gesture (such as "up," "down," "left," "right," "forward," "back," or "hand"), the node configures parameters like velocity, gait type, and motion mode, then publishes a message to the "high_cmd" topic. This mechanism enables the robot to perform various maneuvers by directly converting high-level gesture inputs into precise low-level motion commands.
+## Unitree GO1 Quadruped Robot
 
-**Mediapipe Hand Gesture Recognition**: Hand gesture recognition is implemented using Google’s Mediapipe. A pre-trained model detects 21 key points on the hand, and the angles between those key points are used to classify gestures. The detected gesture is published on the “active_gesture” topic, which then controls the robot’s movement. This simple but effective approach was enhanced through numerous experiments, several weeks of tinkering with the model’s output plotting and threshold calibration. Early tests showed reliable gesture detection, and later refinements included improvements to the real-time performance and robustness to different hand positions.
+The GO1 robot is a quadruped robot developed by Unitree Robotics. It is controlled using a C++ API that communicates with the robot through a UDP connection. The API provides functions to control the robot's joints, read sensor data, and get the robot's camera feed. It is adapted from the repository [unitree_legged_sdk](https://github.com/katie-hughes/unitree_ros2). A new ROS2 node was created to control the robot using the API. The node has a variable that stores the current gesture, which is updated via a subscription to the "active_gesture" topic. The subscriber callback receives strings representing gestures and sets the current gesture accordingly. In the high-frequency control loop, the node evaluates the current gesture and formulates a corresponding command message. Depending on the gesture (such as "up," "down," "left," "right," "forward," "back," or "hand"), the node configures parameters like velocity, gait type, and motion mode, then publishes a message to the "high_cmd" topic. This mechanism enables the robot to perform various maneuvers by directly converting high-level gesture inputs into precise low-level motion commands.
 
-**AR Glasses and Live Camera Feed Integration**: The AR glasses are a central component for providing the operator with real-time visual feedback directly from the robot’s onboard camera. Key developments and milestones include:
+## Mediapipe Hand Gesture Recognition
+
+Hand gesture recognition is implemented using Google’s Mediapipe. A pre-trained model detects 21 key points on the hand, and the angles between those key points are used to classify gestures. The detected gesture is published on the “active_gesture” topic, which then controls the robot’s movement. This simple but effective approach was enhanced through numerous experiments, several weeks of tinkering with the model’s output plotting and threshold calibration. Early tests showed reliable gesture detection, and later refinements included improvements to the real-time performance and robustness to different hand positions.
+
+## AR Glasses and Live Camera Feed Integration
+
+The AR glasses are a central component for providing the operator with real-time visual feedback directly from the robot’s onboard camera. Key developments and milestones include:
 
 • Displaying Images on the Glass
 
@@ -40,7 +46,9 @@ This project combines quadruped robotics, computer vision for hand gesture recog
 
 The development logs detail tests ranging from early image grabbing to the full integration where the robot’s camera feed is seamlessly pushed via Bluetooth from the main computer (which orchestrates the entire pipeline) to the AR glasses.
 
-**Integration, Advanced Gestures, and Future Modes**: After the initial integration of gesture-based controls with visual feedback, the focus turned to advanced control modes and enhanced robotics behavior. Recent journal entries detail the following progress: • Advanced Gestures and Dog Movements
+## Integration, Advanced Gestures, and Future Modes
+
+After the initial integration of gesture-based controls with visual feedback, the focus turned to advanced control modes and enhanced robotics behavior. Recent journal entries detail the following progress: • Advanced Gestures and Dog Movements
 
 – The Unitree GO1 successfully performed all required movements (left/right/up/down) and even executed a handshake routine in response to a “fist” gesture.
 
@@ -62,7 +70,9 @@ The development logs detail tests ranging from early image grabbing to the full 
 
 – Firmware updates on the glasses and adjustments in the communication protocols (moving between HTTP and Bluetooth) have progressively optimized the closed-loop control interface.
 
-**Project Timeline and Tasks Overview**: A detailed journal of tasks and milestones is maintained, with key completions and upcoming challenges, such as:
+## Project Timeline and Tasks Overview
+
+A detailed journal of tasks and milestones is maintained, with key completions and upcoming challenges, such as:
 
 • Setting Up the Glasses
 
@@ -88,11 +98,13 @@ The development logs detail tests ranging from early image grabbing to the full 
 
 The project’s repository, related forks (including a modified Frames Python SDK), and further details can be found via the links provided throughout the documentation.
 
-**Conclusion**: This project demonstrates the feasibility of controlling a sophisticated quadruped robot using high-level hand gestures and AR-enabled visual feedback. Starting with basic movement commands and evolving into advanced control modes, the iterative development process has been guided by a detailed journal documenting week-by-week progress. The integration of ROS2-based control, Mediapipe hand tracking, and AR glasses for real-time imaging forms a robust proof-of-concept that not only achieves closed-loop control but also opens the door to future enhancements such as IMU-based head movement control and optical flow for spatial navigation.
+## Conclusion
+
+This project demonstrates the feasibility of controlling a sophisticated quadruped robot using high-level hand gestures and AR-enabled visual feedback. Starting with basic movement commands and evolving into advanced control modes, the iterative development process has been guided by a detailed journal documenting week-by-week progress. The integration of ROS2-based control, Mediapipe hand tracking, and AR glasses for real-time imaging forms a robust proof-of-concept that not only achieves closed-loop control but also opens the door to future enhancements such as IMU-based head movement control and optical flow for spatial navigation.
 
 By sharing these insights and the challenges encountered, from meeting hardware limitations to overcoming communication latencies, the project contributes openly to the robotics and AR communities and lays the foundation for more immersive, intuitive human–robot interfaces.
 
-**References**: 
+## References 
 
 1. https://github.com/google-ai-edge/mediapipe-samples/blob/7268248f1401d6f9a72a48361004c185922eeb3b/examples/gesture_recognizer/python/gesture_recognizer.ipynb
 
