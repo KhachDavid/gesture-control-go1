@@ -4,3 +4,5 @@ dog_frames/
 frame_examples_python/
 frame_msg/
 media/
+venv/
+dog_camera_worker/captured_images/*
