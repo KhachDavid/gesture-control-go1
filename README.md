@@ -24,79 +24,79 @@ The GO1 robot is a quadruped robot developed by Unitree Robotics. It is controll
 
 ## Mediapipe Hand Gesture Recognition
 
-Hand gesture recognition is implemented using Google’s Mediapipe. A pre-trained model detects 21 key points on the hand, and the angles between those key points are used to classify gestures. The detected gesture is published on the “active_gesture” topic, which then controls the robot’s movement. This simple but effective approach was enhanced through numerous experiments, several weeks of tinkering with the model’s output plotting and threshold calibration. Early tests showed reliable gesture detection, and later refinements included improvements to the real-time performance and robustness to different hand positions.
+Hand gesture recognition is implemented using Google's Mediapipe. A pre-trained model detects 21 key points on the hand, and the angles between those key points are used to classify gestures. The detected gesture is published on the “active_gesture” topic, which then controls the robot’s movement. This simple but effective approach was enhanced through numerous experiments, several weeks of tinkering with the model’s output plotting and threshold calibration. Early tests showed reliable gesture detection, and later refinements included improvements to the real-time performance and robustness to different hand positions.
 
 ## AR Glasses and Live Camera Feed Integration
 
-The AR glasses are a central component for providing the operator with real-time visual feedback directly from the robot’s onboard camera. Key developments and milestones include:
+The AR glasses are a central component for providing the operator with real-time visual feedback directly from the robot's onboard camera. Below are the key developments conducted:
 
-• Displaying Images on the Glass
+Displaying Images on the Glass:
 
-– A custom Python TxSprite class was written to convert images into a sprite format compatible with the glasses.
+    A custom Python TxSprite class was written to convert images into a sprite format compatible with the glasses.
 
-– Lua scripts were updated and flashed to ensure that bitmapped images (with necessary color quantization for a monochrome display) could be reliably rendered.
+    Lua scripts were updated and flashed to ensure that bitmapped images (with necessary color quantization for a monochrome display) could be reliably rendered.
 
-• Image Feedback from the Robot
+Image Feedback from the Robot:
 
-– Early experiments streamed images using SCP for convenience. After rapid prototyping, the pipeline was changed to use HTTP transfer (yielding approximately 0.3-second latency) for improved reliability.
+    Early experiments streamed images using SCP for convenience. After rapid prototyping, the pipeline was changed to use HTTP transfer (yielding approximately 0.3-second latency) for improved reliability.
 
-– Improvements included parallelization of the Mediapipe pipeline and the robot’s live stream using asyncio, leading to a more robust closed-loop control demonstration.
+    Improvements included parallelization of the Mediapipe pipeline and the robot’s live stream using asyncio, leading to a more robust closed-loop control demonstration.
 
-– Experimental modifications with LZ4 compression, enabled by firmware release v25.031.0924 (which added an API for decompression), further accelerated the display, particularly in high-speed scenarios.
-
-The development logs detail tests ranging from early image grabbing to the full integration where the robot’s camera feed is seamlessly pushed via Bluetooth from the main computer (which orchestrates the entire pipeline) to the AR glasses.
+    Experimental modifications with LZ4 compression, enabled by firmware release v25.031.0924 (which added an API for decompression), further accelerated the display, particularly in high-speed scenarios.
 
 ## Integration, Advanced Gestures, and Future Modes
 
-After the initial integration of gesture-based controls with visual feedback, the focus turned to advanced control modes and enhanced robotics behavior. Recent journal entries detail the following progress: • Advanced Gestures and Dog Movements
+After the initial integration of gesture-based controls with visual feedback, the focus turned to advanced control modes and enhanced robotics behavior.
 
-– The Unitree GO1 successfully performed all required movements (left/right/up/down) and even executed a handshake routine in response to a “fist” gesture.
+Advanced Gestures and Dog Movements:
 
-– A custom demonstration allowed the dog to perform a dance routine as a playful response when certain gestures were recognized.
+    The Unitree GO1 successfully performed all required movements (left/right/up/down) and even executed a handshake routine in response to a “fist” gesture.
 
-• IMU and Optical Flow for Alternative Control Modes
+    A custom demonstration allowed the dog to perform a dance routine as a playful response when certain gestures were recognized.
 
-– A proposed stretch goal is to implement two new control modes using the AR glasses:
+IMU and Optical Flow for Alternative Control Modes:
 
-1. “Pointing” Mode: leveraging optical flow to move the dog towards a location indicated by the user’s gesture. This mode uses odometry to counteract challenges such as occlusion.
+    A proposed stretch goal is to implement two new control modes using the AR glasses:
 
-2. “IMU” Mode: based on head movements detected by the glasses’ IMU. Despite challenges in filtering out sensor noise (including the need for debounce routines and potentially Kalman filters), early experiments with roll and pitch have already yielded promising results.
+    “Pointing” Mode: leveraging optical flow to move the dog towards a location indicated by the user’s gesture. This mode uses odometry to counteract challenges such as occlusion.
 
-– Discussions with other developers (e.g., CitizenOne on GitHub) have informed attempts to integrate more robust filtering methods for accurate heading/yaw from the magnetometer, though calibration remains nontrivial.
+    “IMU” Mode: based on head movements detected by the glasses’ IMU. Despite challenges in filtering out sensor noise (including the need for debounce routines and potentially Kalman filters), early experiments with roll and pitch have already yielded promising results.
 
-• Hardware and Firmware Enhancements
+    Discussions with other developers (e.g., CitizenOneX on GitHub) have informed attempts to integrate more robust filtering methods for accurate heading/yaw from the magnetometer, though calibration remains nontrivial.
 
-– A new Raspberry Pi Zero-based camera setup was tested and reconfigured to reduce latency between the dog’s camera capture and the AR glasses display. Plans for a Pi Zero 2 (supporting Mediapipe natively) were set once the hardware becomes available.
+Hardware and Firmware Enhancements:
 
-– Firmware updates on the glasses and adjustments in the communication protocols (moving between HTTP and Bluetooth) have progressively optimized the closed-loop control interface.
+    A new Raspberry Pi Zero-based camera setup was tested and reconfigured to reduce latency between the dog’s camera capture and the AR glasses display. Plans for a Pi Zero 2 (supporting Mediapipe natively) were set once the hardware becomes available.
+
+    Firmware updates on the glasses and adjustments in the communication protocols (moving between HTTP and Bluetooth) have progressively optimized the closed-loop control interface.
 
 ## Project Timeline and Tasks Overview
 
 A detailed journal of tasks and milestones is maintained, with key completions and upcoming challenges, such as:
 
-• Setting Up the Glasses
+Setting Up the Glasses:
 
-– Preliminary tests and fully functional demos for image feedback and gesture recognition were completed by mid-January.
+    Preliminary tests and fully functional demos for image feedback and gesture recognition were completed by mid-January.
 
-– A custom Bluetooth package was created and integrated successfully.
+    A custom Bluetooth package was created and integrated successfully.
 
-• Moving Unitree GO1
+Moving Unitree GO1:
 
-– The integration of the ROS2 C++ SDK into the development environment was successfully handled, with the robot responding correctly to commands from the gesture recognition pipeline by late January.
+    The integration of the ROS2 C++ SDK into the development environment was successfully handled, with the robot responding correctly to commands from the gesture recognition pipeline by late January.
 
-• Advanced Gestures and Image Feedback via AR Glasses
+    Advanced Gestures and Image Feedback via AR Glasses
 
-– Progressive updates (from February through early March) included the integration of LZ4 image compression, improved closed-loop control demonstrations, and experimental modifications with the Raspberry Pi Zero trials, each documented by week.
+    Progressive updates (from February through early March) included the integration of LZ4 image compression, improved closed-loop control demonstrations, and experimental modifications with the Raspberry Pi Zero trials, each documented by week.
 
-• Future Tasks and Improvements
+Future Tasks and Improvements:
 
-– Ongoing work involves finalizing the IMU control mode, particularly calibrating the magnetometer and filtering IMU noise.
+    Ongoing work involves finalizing the IMU control mode, particularly calibrating the magnetometer and filtering IMU noise.
 
-– Investigations into simpler yet effective Optical Flow approaches will be pursued to further eliminate latency in the “pointing” control mode.
+    Investigations into simpler yet effective Optical Flow approaches will be pursued to further eliminate latency in the “pointing” control mode.
 
-– There is an intention to extend the demonstration to generalize control modules for other robotics platforms (such as drones and robot arms) in the future.
+    There is an intention to extend the demonstration to generalize control modules for other robotics platforms (such as drones and robot arms) in the future.
 
-The project’s repository, related forks (including a modified Frames Python SDK), and further details can be found via the links provided throughout the documentation.
+    The project’s repository, related forks (including a modified Frames Python SDK), and further details can be found via the links provided throughout the documentation.
 
 ## Conclusion
 
