@@ -1,0 +1,34 @@
+<launch>
+
+  <arg name="path_prefix" default="$(find-pkg-share ros2_hgr)/"/>
+  <arg name="use_realsense" default="false" />
+  <arg name="dogcam" default="false" />
+
+  <include file="$(find-pkg-share realsense2_camera)/launch/rs_launch.py" if="$(eval '\'$(var use_realsense)\' == \'true\'')">
+    <arg name="enable_depth" value="false" />
+    <arg name="enable_fisheye1" value="false" />
+    <arg name="enable_fisheye2" value="false" />
+    <arg name="enable_confidence" value="false" />
+    <arg name="rgb_camera.profile" value="640x480x60" />
+  </include>
+
+  <node name="hgr_node_cam" pkg="ros2_hgr" exec="hgr_node_cam" if="$(eval '\'$(var use_realsense)\'')">
+    <param name="path_prefix1" value="$(var path_prefix)" />
+  </node>
+
+  <node name="hgr_node_dogcam" pkg="ros2_hgr" exec="hgr_node_dogcam" if="$(eval '\'$(var dogcam)\'')">
+    <param name="path_prefix1" value="$(var path_prefix)" />
+  </node>
+
+  <node name="hgr_node" pkg="ros2_hgr" exec="hgr_node" if="$(eval '\'$(var use_realsense)\' == \'false\' and \'$(var dogcam)\' == \'false\' ')">
+    <param name="path_prefix1" value="$(var path_prefix)" />
+  </node>
+
+  <!--<node name="hgr_com" pkg="go1_cmd" exec="hgr_com" output="screen">-->
+  <!--</node>-->
+
+  <!--<include file="$(find-pkg-share unitree_nav)/launch/control.launch.py">-->
+  <!--  <arg name="use_rviz" value="false" />-->
+  <!--</include>-->
+
+</launch>

@@ -8,3 +8,6 @@ venv/
 dog_camera_worker/captured_images/*
 *swp,
 __pycache__/
+ros_workspace/build/
+ros_workspace/install/
+ros_workspace/log/
