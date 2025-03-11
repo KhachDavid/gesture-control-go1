@@ -1,0 +1,11 @@
+#!/bin/bash
+cd
+cd Frames/ros_workspace
+colcon build
+source install/setup.bash
+ros2 launch ros2_hgr hgr.launch.xml &
+ros2 run unitree_legged_real ros2_udp highlevel &
+ros2 run unitree_legged_real frames_open_palm &
+cd ../frames_worker
+python3 camera_feed.py &
+

@@ -4,6 +4,7 @@
 #include "ros2_unitree_legged_msgs/msg/low_cmd.hpp"
 #include "ros2_unitree_legged_msgs/msg/low_state.hpp"
 #include "std_msgs/msg/string.hpp"
+#include "std_msgs/msg/int32.hpp"
 #include "unitree_legged_sdk/unitree_legged_sdk.h"
 #include "convert.h"
 
@@ -18,12 +19,12 @@ public:
         pub_ = this->create_publisher<ros2_unitree_legged_msgs::msg::HighCmd>("high_cmd", 1);
 
         // Subscriber to the "active_gesture" topic
-        sub_ = this->create_subscription<std_msgs::msg::String>(
-            "active_gesture", 10,
-            [this](std_msgs::msg::String::SharedPtr msg) {
-                RCLCPP_INFO(this->get_logger(), "Received gesture: '%s'", msg->data.c_str());
-                this->current_gesture_ = msg->data;
-
+        // Subscriber to the "hgr_topic" topic for Int32 values
+        sub_ = this->create_subscription<std_msgs::msg::Int32>(
+            "hgr_topic", 10,
+            [this](std_msgs::msg::Int32::SharedPtr msg) {
+                RCLCPP_INFO(this->get_logger(), "Received gesture code: '%d'", msg->data);
+                this->current_gesture_ = mapGestureCodeToString(msg->data);
             });
 
         // Timer to repeatedly execute the main motion loop at 500Hz (2ms per loop)
@@ -139,10 +140,25 @@ void motion_loop()
     last_executed_gesture_ = current_gesture_;
 }
 
+    // Helper function to map Int32 values to string gestures
+    std::string mapGestureCodeToString(int gesture_code)
+    {
+        switch (gesture_code) {
+            case -1: return "none";
+            case 5: return "up";
+            case 6: return "down";
+            case 0: return "left";
+            case 7: return "right";
+            case 2: return "forward";
+            case 4: return "back";
+            case 1: return "hand";
+            default: return "none";  // Default to 'none' if the gesture code is unrecognized
+        }
+    }
 
     // ROS2 interfaces
     rclcpp::Publisher<ros2_unitree_legged_msgs::msg::HighCmd>::SharedPtr pub_;
-    rclcpp::Subscription<std_msgs::msg::String>::SharedPtr sub_;
+    rclcpp::Subscription<std_msgs::msg::Int32>::SharedPtr sub_;
     rclcpp::TimerBase::SharedPtr timer_;
 
     // Current detected gesture

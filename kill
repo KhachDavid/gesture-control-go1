@@ -1,0 +1,12 @@
+#!/bin/bash
+
+# Kill the ROS 2 components and Python script
+
+# Kill ROS 2 launch and run processes by their names
+ps ux | grep 'ros' | grep -v grep | awk '{print $2}' | xargs kill
+
+# Kill the Python camera feed process
+pkill -f 'python3 camera_feed.py'
+
+echo "All processes have been terminated."
+
