@@ -1,27 +1,6 @@
 # Teleoperating Quadrupeds with AR Glasses
 
-<iframe style="width: 100%; max-width: 600px; height: auto; min-height: 400px; 
-            @media (min-width: 768px) { width: 80%; max-width: 800px; } 
-            @media (min-width: 1200px) { width: 60%; max-width: 1000px; }" src="https://www.youtube.com/embed/POHBXnE-2EU?si=vtejNMxPS6ItHHtg&amp;start=4" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-<p style="
-    font-size: 0.8em;
-    font-style: italic;
-    color: #777;
-">
-Knocking Pins using hand gestures and feedback from the AR Glasses
-</p>
-</br>
-
-<iframe style="width: 100%; max-width: 600px; height: auto; min-height: 400px; 
-            @media (min-width: 768px) { width: 80%; max-width: 800px; } 
-            @media (min-width: 1200px) { width: 60%; max-width: 1000px; }" src="https://www.youtube.com/embed/fxmVGViPP74?si=WH9VBvqyr7Oq93H6" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-            <p style="
-    font-size: 0.8em;
-    font-style: italic;
-    color: #777;
-">
-Closeup of what the AR Glasses display
-</p>
+<video src="https://github.com/user-attachments/assets/f5e1d19e-e097-401d-8b28-f44feecbcfc0"></video>
 
 Github Repository is [here](https://github.com/KhachDavid/gesture-control-go1)
 </br></br>
