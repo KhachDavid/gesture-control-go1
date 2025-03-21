@@ -45,7 +45,7 @@ In the high-frequency control loop, the node evaluates the current gesture and f
 
 ## AR Glasses
 
-<img src="https://raw.githubusercontent.com/KhachDavid/gesture-control-go1/refs/heads/main/readme_assets/glasses_disassembled.jpeg" style="width: 100%; max-width: 600px; height: auto; 
+<img src="https://raw.githubusercontent.com/KhachDavid/gesture-control-go1/dff1696844e892e599f086f9771d4abed3bf23ae/readme_assets/glasses_disassembled.jpeg" style="width: 100%; max-width: 600px; height: auto; 
             @media (min-width: 768px) { width: 80%; max-width: 800px; } 
             @media (min-width: 1200px) { width: 60%; max-width: 1000px; }" />
 <p style="
