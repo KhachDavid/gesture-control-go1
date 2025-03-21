@@ -102,7 +102,7 @@ async def display_latest_dog_frame(f):
             print("No image found.")
             return
 
-        sprite = TxSprite.from_image_bytes(img, max_pixels=40000)
+        sprite = TxSprite.from_image_bytes(img, max_pixels=64000)
         isb = TxImageSpriteBlock(image=sprite, sprite_line_height=16, progressive_render=True)
 
         await f.send_message(0x20, isb.pack())

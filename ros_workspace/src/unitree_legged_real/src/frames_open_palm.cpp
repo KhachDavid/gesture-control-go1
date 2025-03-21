@@ -112,8 +112,8 @@ void motion_loop()
         high_cmd_ros.velocity[1] = 0;
 
         // set the mode to 1 first
-        high_cmd_ros.mode = 1;
-        pub_ -> publish(high_cmd_ros);
+        //high_cmd_ros.mode = 1;
+        //pub_ -> publish(high_cmd_ros);
 
 
         high_cmd_ros.mode = 11;
@@ -148,10 +148,10 @@ void motion_loop()
             case 5: return "up";
             case 6: return "down";
             case 0: return "left";
-            case 7: return "right";
+            case 1: return "right";
             case 2: return "forward";
             case 4: return "back";
-            case 1: return "hand";
+            case 7: return "hand";
             default: return "none";  // Default to 'none' if the gesture code is unrecognized
         }
     }
